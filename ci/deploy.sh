@@ -15,4 +15,4 @@ gcloud auth activate-service-account \
 gcloud config set project $PROJECT
 
 # Deploy the application
-gcloud app deploy --quiet $DIR/../app.yaml
+gcloud app deploy --quiet $DIR/../src/skeleton/app.yaml
