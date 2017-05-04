@@ -3,6 +3,7 @@ package main
 import (
     "fmt"
     "net/http"
+    "strings"
     "google.golang.org/appengine"
 )
 
@@ -27,7 +28,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 func GetIndex(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusOK)
     w.Header().Set("Content-Type", "text/plain")
-    fmt.Fprint(w, "hello, world")
+    fmt.Fprint(w, strings.Split(r.RemoteAddr, ":")[0])
 }
 
 func NotFound(w http.ResponseWriter, r *http.Request) {

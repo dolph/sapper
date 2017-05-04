@@ -26,6 +26,9 @@ func (handler TestHandler) request(method string, path string, headers map[strin
         request.Header.Set(header, value)
     }
 
+    // Set an arbitrary remote address for logging purposes, etc.
+    request.RemoteAddr = "1.2.3.4"
+
     response := httptest.NewRecorder()
     http.HandlerFunc(handler.f).ServeHTTP(response, request)
     return TestResponse{handler.t, response}
@@ -87,7 +90,7 @@ func (response TestResponse) AssertHeaderExists(header string) {
 func TestGetIndex(t *testing.T) {
     response := TestHandler{t, IndexHandler}.Get("/", nil)
     response.AssertStatusEquals(http.StatusOK)
-    response.AssertBodyEquals("hello, world")
+    response.AssertBodyEquals("1.2.3.4")
 }
 
 func TestGetInvalidUrl(t *testing.T) {
