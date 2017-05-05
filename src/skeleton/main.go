@@ -29,14 +29,14 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 
     // RemoteAddr is formatted as host:port, so we just trim off the port here
     // and return the IP.
-    fmt.Fprintf(w, "%s\r\n", strings.Split(r.RemoteAddr, ":")[0])
+    fmt.Fprintf(w, "%s\n", strings.Split(r.RemoteAddr, ":")[0])
 }
 
 // Returns a 404 Not Found page.
 func NotFound(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusNotFound)
     w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
-    fmt.Fprintf(w, "%d Not Found\r\n", http.StatusNotFound)
+    fmt.Fprintf(w, "%d Not Found\n", http.StatusNotFound)
 }
 
 // appengine.Main() expects packages to register HTTP handlers in their init()

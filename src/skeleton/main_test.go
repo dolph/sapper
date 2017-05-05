@@ -90,11 +90,11 @@ func (response TestResponse) AssertHeaderExists(header string) {
 func TestGetIndex(t *testing.T) {
     response := TestHandler{t, IndexHandler}.Get("/", nil)
     response.AssertStatusEquals(http.StatusOK)
-    response.AssertBodyEquals("1.2.3.4\r\n")
+    response.AssertBodyEquals("1.2.3.4\n")
 }
 
 func TestGetInvalidUrl(t *testing.T) {
     response := TestHandler{t, IndexHandler}.Get("/non-existant", nil)
     response.AssertStatusEquals(http.StatusNotFound)
-    response.AssertBodyEquals("404 Not Found\r\n")
+    response.AssertBodyEquals("404 Not Found\n")
 }
