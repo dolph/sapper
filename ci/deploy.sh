@@ -15,4 +15,4 @@ gcloud auth activate-service-account \
 gcloud config set project $PROJECT
 
 # Deploy the application
-gcloud app deploy --quiet $DIR/../src/skeleton/app.yaml
+gcloud app deploy --log-http --verbosity=debug $DIR/../src/skeleton/app.yaml
