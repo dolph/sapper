@@ -7,10 +7,7 @@ import (
     "google.golang.org/appengine"
 )
 
-func init() {
-    http.HandleFunc("/", IndexHandler)
-}
-
+// Trivially routes requests to the correct response function.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
     switch r.URL.Path {
         case "/":
@@ -25,18 +22,31 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+// Returns the client's IP address.
 func GetIndex(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusOK)
     w.Header().Set("Content-Type", "text/plain")
+
+    // RemoteAddr is formatted as host:port, so we just trim off the port here
+    // and return the IP.
     fmt.Fprint(w, strings.Split(r.RemoteAddr, ":")[0])
 }
 
+// Returns a 404 Not Found page.
 func NotFound(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusNotFound)
     w.Header().Set("Content-Type", "text/plain")
     fmt.Fprintf(w, "%d Not Found", http.StatusNotFound)
 }
 
+// appengine.Main() expects packages to register HTTP handlers in their init()
+// functions.
+func init() {
+    http.HandleFunc("/", IndexHandler)
+}
+
 func main() {
+    // Starts listening on port 8080 (or $PORT), and never returns.
+    // https://godoc.org/google.golang.org/appengine#Main
     appengine.Main()
 }
