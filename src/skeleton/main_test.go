@@ -15,7 +15,7 @@ type TestHandler struct {
 }
 
 // Build an HTTP request, pass it to the HTTP handler, and return the response.
-func (handler TestHandler) request(method string, path string, headers map[string]string) TestResponse {
+func (handler TestHandler) request(method, path string, headers map[string]string) TestResponse {
     request, err := http.NewRequest(method, path, nil)
     if err != nil {
         handler.t.Fatal(err)
@@ -87,14 +87,31 @@ func (response TestResponse) AssertHeaderExists(header string) {
     }
 }
 
+// Ensure that the response contains a specific header-value pair.
+func (response TestResponse) AssertHeaderContains(header, expected string) {
+    response.AssertHeaderExists(header)
+    actuals, _ := response.r.Header()[header]
+    for _, actual := range actuals {
+        if actual == expected {
+            return
+        }
+    }
+
+    response.t.Errorf(
+        "Handler returned unexpected %v: got `%v` want `%v`",
+        header, actuals, expected)
+}
+
 func TestGetIndex(t *testing.T) {
     response := TestHandler{t, IndexHandler}.Get("/", nil)
     response.AssertStatusEquals(http.StatusOK)
     response.AssertBodyEquals("1.2.3.4\n")
+    response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")
 }
 
 func TestGetInvalidUrl(t *testing.T) {
     response := TestHandler{t, IndexHandler}.Get("/non-existant", nil)
     response.AssertStatusEquals(http.StatusNotFound)
     response.AssertBodyEquals("404 Not Found\n")
+    response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")
 }

@@ -24,8 +24,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // Returns the client's IP address.
 func GetIndex(w http.ResponseWriter, r *http.Request) {
-    w.WriteHeader(http.StatusOK)
     w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+    w.WriteHeader(http.StatusOK)
 
     // RemoteAddr is formatted as host:port, so we just trim off the port here
     // and return the IP.
@@ -34,8 +34,8 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 
 // Returns a 404 Not Found page.
 func NotFound(w http.ResponseWriter, r *http.Request) {
-    w.WriteHeader(http.StatusNotFound)
     w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
+    w.WriteHeader(http.StatusNotFound)
     fmt.Fprintf(w, "%d Not Found\n", http.StatusNotFound)
 }
 
