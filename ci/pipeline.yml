@@ -8,6 +8,25 @@ resources:
     private_key: {{ssh_private_key}}
 
 jobs:
+- name: lint
+  serial: false
+  build_logs_to_retain: 10
+  plan:
+  - get: repo
+    trigger: true
+  - task: test
+    timeout: 5m
+    attempts: 3
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: dolphm/ubuntu-google-cloud
+      inputs:
+      - name: repo
+      run:
+        path: repo/ci/lint.sh
 - name: test
   serial: false
   build_logs_to_retain: 10
@@ -33,7 +52,7 @@ jobs:
   plan:
   - get: repo
     trigger: true
-    passed: [test]
+    passed: [lint, test]
   - task: run
     timeout: 15m
     attempts: 3
