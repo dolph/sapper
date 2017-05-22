@@ -5,13 +5,16 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	// Request routing
+	"github.com/gorilla/mux"
 )
 
 type TestHandler struct {
 	t *testing.T
 
-	// The HTTP handler function to be tested.
-	f func(http.ResponseWriter, *http.Request)
+	// The HTTP router to be tested.
+	router func() *mux.Router
 }
 
 // Build an HTTP request, pass it to the HTTP handler, and return the response.
@@ -30,7 +33,7 @@ func (handler TestHandler) request(method, path string, headers map[string]strin
 	request.RemoteAddr = "1.2.3.4"
 
 	response := httptest.NewRecorder()
-	http.HandlerFunc(handler.f).ServeHTTP(response, request)
+	handler.router().ServeHTTP(response, request)
 	return TestResponse{handler.t, response}
 }
 
@@ -103,14 +106,14 @@ func (response TestResponse) AssertHeaderContains(header, expected string) {
 }
 
 func TestGetIndex(t *testing.T) {
-	response := TestHandler{t, IndexHandler}.Get("/", nil)
+	response := TestHandler{t, Router}.Get("/", nil)
 	response.AssertStatusEquals(http.StatusOK)
 	response.AssertBodyEquals("1.2.3.4\n")
 	response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")
 }
 
 func TestGetInvalidUrl(t *testing.T) {
-	response := TestHandler{t, IndexHandler}.Get("/non-existant", nil)
+	response := TestHandler{t, Router}.Get("/non-existant", nil)
 	response.AssertStatusEquals(http.StatusNotFound)
 	response.AssertBodyEquals("404 Not Found\n")
 	response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")

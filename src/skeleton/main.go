@@ -28,14 +28,17 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%d Not Found\n", http.StatusNotFound)
 }
 
-// appengine.Main() expects packages to register HTTP handlers in their init()
-// functions.
-func init() {
+func Router() *mux.Router {
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(NotFound)
 	r.HandleFunc("/", GetIndex).Methods("GET")
+	return r
+}
 
-	http.Handle("/", r)
+// appengine.Main() expects packages to register HTTP handlers in their init()
+// functions.
+func init() {
+	http.Handle("/", Router())
 }
 
 func main() {
