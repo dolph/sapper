@@ -19,9 +19,10 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	// RemoteAddr is formatted as host:port, so we just trim off the port here
 	// and return the IP.
 	var ip string
-	switch index := strings.LastIndex(r.RemoteAddr, ":"); index {
+	switch strings.Count(r.RemoteAddr, ":") {
 	case 1:
 		// IPv4 addresses may be of the form IP:port
+		index := strings.LastIndex(r.RemoteAddr, ":")
 		ip = r.RemoteAddr[:index]
 	default:
 		// IPv6 addresses have multiple colons, and no ports.
