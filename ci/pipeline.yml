@@ -23,7 +23,7 @@ jobs:
   build_logs_to_retain: 3
   plan:
   - get: repo
-    trigger: true
+    trigger: false
   - get: weekly
     trigger: true
   - put: image
