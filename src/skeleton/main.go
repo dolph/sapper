@@ -6,22 +6,10 @@ import (
 	"strings"
 
 	"google.golang.org/appengine"
-)
 
-// Trivially routes requests to the correct response function.
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.URL.Path {
-	case "/":
-		switch r.Method {
-		case http.MethodGet:
-			GetIndex(w, r)
-		default:
-			NotFound(w, r)
-		}
-	default:
-		NotFound(w, r)
-	}
-}
+	// Request routing
+	"github.com/gorilla/mux"
+)
 
 // Returns the client's IP address.
 func GetIndex(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +31,11 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 // appengine.Main() expects packages to register HTTP handlers in their init()
 // functions.
 func init() {
-	http.HandleFunc("/", IndexHandler)
+	r := mux.NewRouter()
+	r.NotFoundHandler = http.HandlerFunc(NotFound)
+	r.HandleFunc("/", GetIndex).Methods("GET")
+
+	http.Handle("/", r)
 }
 
 func main() {
