@@ -12,9 +12,10 @@ resources:
     interval: 168h
 - name: image
   type: docker-image
-  source: dolphm/go-skeleton-test
-  username: {{docker_hub_username}}
-  password: {{docker_hub_password}}
+  source:
+    repository: dolphm/go-skeleton-test
+    username: {{docker_hub_username}}
+    password: {{docker_hub_password}}
 
 jobs:
 - name: build-image
