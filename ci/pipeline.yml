@@ -78,6 +78,7 @@ jobs:
   plan:
   - get: image
     trigger: false
+    passed: [lint, test]
   - get: repo
     trigger: true
     passed: [lint, test]
