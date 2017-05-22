@@ -20,10 +20,12 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 	// and return the IP.
 	var ip string
 	switch index := strings.LastIndex(r.RemoteAddr, ":"); index {
-	case -1:
-		ip = r.RemoteAddr
-	default:
+	case 1:
+		// IPv4 addresses may be of the form IP:port
 		ip = r.RemoteAddr[:index]
+	default:
+		// IPv6 addresses have multiple colons, and no ports.
+		ip = r.RemoteAddr
 	}
 	fmt.Fprintf(w, "%s\n", ip)
 }
