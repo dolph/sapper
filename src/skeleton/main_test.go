@@ -30,7 +30,7 @@ func (handler TestHandler) request(method, path string, headers map[string]strin
 	}
 
 	// Set an arbitrary remote address for logging purposes, etc.
-	request.RemoteAddr = "1.2.3.4"
+	request.RemoteAddr = "1.2.3.4:80"
 
 	response := httptest.NewRecorder()
 	handler.router().ServeHTTP(response, request)
