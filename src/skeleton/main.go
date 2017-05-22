@@ -18,7 +18,14 @@ func GetIndex(w http.ResponseWriter, r *http.Request) {
 
 	// RemoteAddr is formatted as host:port, so we just trim off the port here
 	// and return the IP.
-	fmt.Fprintf(w, "%s\n", strings.Split(r.RemoteAddr, ":")[0])
+	var ip string
+	switch index := strings.LastIndex(r.RemoteAddr, ":"); index {
+	case -1:
+		ip = r.RemoteAddr
+	default:
+		ip = r.RemoteAddr[:index]
+	}
+	fmt.Fprintf(w, "%s\n", ip)
 }
 
 // Returns a 404 Not Found page.
