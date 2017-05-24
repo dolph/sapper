@@ -5,6 +5,7 @@ PROJECT=$1
 KEY=$2
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/../
 
 # Authenticate with Google Cloud
 echo "$KEY" | base64 --decode > key_file.json
@@ -15,4 +16,4 @@ gcloud auth activate-service-account \
 gcloud config set project $PROJECT
 
 # Deploy the application
-gcloud app deploy --quiet --verbosity=debug $DIR/../src/skeleton/app.yaml
+gcloud app deploy --quiet --verbosity=debug app.yaml

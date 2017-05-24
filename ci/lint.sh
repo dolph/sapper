@@ -2,9 +2,9 @@
 set -ex
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/../
 
 # Linting.
-cd $DIR/../src/skeleton/
 files_needing_linting=$(gofmt -l .)
 if [[ $(gofmt -d .) ]]; then
     echo $files_needing_linting
