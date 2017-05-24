@@ -33,7 +33,7 @@ func (handler TestHandler) request(method, path string, headers map[string]strin
 
 	request, err := instance.NewRequest(method, path, nil)
 	if err != nil {
-		handler.t.Fatal(err)
+		handler.t.Fatalf("Failed to create request: %v", err)
 	}
 
 	// Set request headers, if any.
@@ -120,7 +120,7 @@ func (response TestResponse) AssertHeaderContains(header, expected string) {
 func TestGetIndex(t *testing.T) {
 	ctx, done, err := aetest.NewContext()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("Failed to create context: %v", err)
 	}
 	defer done()
 
@@ -133,7 +133,7 @@ func TestGetIndex(t *testing.T) {
 func TestGetInvalidUrl(t *testing.T) {
 	ctx, done, err := aetest.NewContext()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("Failed to create context: %v", err)
 	}
 	defer done()
 
