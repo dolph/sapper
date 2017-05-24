@@ -6,9 +6,6 @@ import (
 	"strings"
 
 	"google.golang.org/appengine"
-
-	// Request routing
-	"github.com/gorilla/mux"
 )
 
 // Returns the client's IP address.
@@ -36,13 +33,6 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	w.WriteHeader(http.StatusNotFound)
 	fmt.Fprintf(w, "%d Not Found\n", http.StatusNotFound)
-}
-
-func Router() *mux.Router {
-	r := mux.NewRouter()
-	r.NotFoundHandler = http.HandlerFunc(NotFound)
-	r.HandleFunc("/", GetIndex).Methods("GET")
-	return r
 }
 
 // appengine.Main() expects packages to register HTTP handlers in their init()
