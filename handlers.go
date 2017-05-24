@@ -7,7 +7,7 @@ import (
 )
 
 // Returns the client's IP address.
-func getIndex(w http.ResponseWriter, r *http.Request) {
+func echoRemoteAddr(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 

@@ -1,10 +1,14 @@
 package main
 
 import (
+	"golang.org/x/net/context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	// Google App Engine
+	"google.golang.org/appengine/aetest"
 
 	// Request routing
 	"github.com/gorilla/mux"
@@ -15,11 +19,19 @@ type TestHandler struct {
 
 	// The HTTP router to be tested.
 	router func() *mux.Router
+
+	ctx context.Context
 }
 
 // Build an HTTP request, pass it to the HTTP handler, and return the response.
 func (handler TestHandler) request(method, path string, headers map[string]string) TestResponse {
-	request, err := http.NewRequest(method, path, nil)
+	inst, err := aetest.NewInstance(nil)
+	if err != nil {
+		handler.t.Fatalf("Failed to create instance: %v", err)
+	}
+	defer inst.Close()
+
+	request, err := inst.NewRequest(method, path, nil)
 	if err != nil {
 		handler.t.Fatal(err)
 	}
@@ -106,14 +118,26 @@ func (response TestResponse) AssertHeaderContains(header, expected string) {
 }
 
 func TestGetIndex(t *testing.T) {
-	response := TestHandler{t, Router}.Get("/", nil)
+	ctx, done, err := aetest.NewContext()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer done()
+
+	response := TestHandler{t, Router, ctx}.Get("/", nil)
 	response.AssertStatusEquals(http.StatusOK)
 	response.AssertBodyEquals("1.2.3.4\n")
 	response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")
 }
 
 func TestGetInvalidUrl(t *testing.T) {
-	response := TestHandler{t, Router}.Get("/non-existant", nil)
+	ctx, done, err := aetest.NewContext()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer done()
+
+	response := TestHandler{t, Router, ctx}.Get("/non-existant", nil)
 	response.AssertStatusEquals(http.StatusNotFound)
 	response.AssertBodyEquals("404 Not Found\n")
 	response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")

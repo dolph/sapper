@@ -10,6 +10,6 @@ import (
 func Router() *mux.Router {
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(notFound)
-	r.HandleFunc("/", getIndex).Methods("GET")
+	r.HandleFunc("/", echoRemoteAddr).Methods("GET")
 	return r
 }
