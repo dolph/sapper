@@ -9,7 +9,7 @@ import (
 
 func Router() *mux.Router {
 	r := mux.NewRouter()
-	r.NotFoundHandler = http.HandlerFunc(NotFound)
-	r.HandleFunc("/", GetIndex).Methods("GET")
+	r.NotFoundHandler = http.HandlerFunc(notFound)
+	r.HandleFunc("/", getIndex).Methods("GET")
 	return r
 }
