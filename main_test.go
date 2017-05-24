@@ -1,7 +1,6 @@
 package main
 
 import (
-	"golang.org/x/net/context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -14,24 +13,29 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func NewServer(t *testing.T) TestHandler {
+	instance, err := aetest.NewInstance(nil)
+	if err != nil {
+		t.Fatalf("Failed to create instance: %v", err)
+	}
+	defer instance.Close()
+
+	return TestHandler{t, Router(), instance}
+}
+
 type TestHandler struct {
 	t *testing.T
 
 	// The HTTP router to be tested.
-	router func() *mux.Router
+	router *mux.Router
 
-	ctx context.Context
+	// The HTTP server to route requests through.
+	instance aetest.Instance
 }
 
 // Build an HTTP request, pass it to the HTTP handler, and return the response.
 func (handler TestHandler) request(method, path string, headers map[string]string) TestResponse {
-	instance, err := aetest.NewInstance(nil)
-	if err != nil {
-		handler.t.Fatalf("Failed to create instance: %v", err)
-	}
-	defer instance.Close()
-
-	request, err := instance.NewRequest(method, path, nil)
+	request, err := handler.instance.NewRequest(method, path, nil)
 	if err != nil {
 		handler.t.Fatalf("Failed to create request: %v", err)
 	}
@@ -45,7 +49,7 @@ func (handler TestHandler) request(method, path string, headers map[string]strin
 	request.RemoteAddr = "1.2.3.4:80"
 
 	response := httptest.NewRecorder()
-	handler.router().ServeHTTP(response, request)
+	handler.router.ServeHTTP(response, request)
 	return TestResponse{handler.t, response}
 }
 
@@ -118,26 +122,14 @@ func (response TestResponse) AssertHeaderContains(header, expected string) {
 }
 
 func TestGetIndex(t *testing.T) {
-	ctx, done, err := aetest.NewContext()
-	if err != nil {
-		t.Fatalf("Failed to create context: %v", err)
-	}
-	defer done()
-
-	response := TestHandler{t, Router, ctx}.Get("/", nil)
+	response := NewServer(t).Get("/", nil)
 	response.AssertStatusEquals(http.StatusOK)
 	response.AssertBodyEquals("1.2.3.4\n")
 	response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")
 }
 
 func TestGetInvalidUrl(t *testing.T) {
-	ctx, done, err := aetest.NewContext()
-	if err != nil {
-		t.Fatalf("Failed to create context: %v", err)
-	}
-	defer done()
-
-	response := TestHandler{t, Router, ctx}.Get("/non-existant", nil)
+	response := NewServer(t).Get("/non-existant", nil)
 	response.AssertStatusEquals(http.StatusNotFound)
 	response.AssertBodyEquals("404 Not Found\n")
 	response.AssertHeaderContains("Content-Type", "text/plain; charset=UTF-8")
