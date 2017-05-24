@@ -25,13 +25,13 @@ type TestHandler struct {
 
 // Build an HTTP request, pass it to the HTTP handler, and return the response.
 func (handler TestHandler) request(method, path string, headers map[string]string) TestResponse {
-	inst, err := aetest.NewInstance(nil)
+	instance, err := aetest.NewInstance(nil)
 	if err != nil {
 		handler.t.Fatalf("Failed to create instance: %v", err)
 	}
-	defer inst.Close()
+	defer instance.Close()
 
-	request, err := inst.NewRequest(method, path, nil)
+	request, err := instance.NewRequest(method, path, nil)
 	if err != nil {
 		handler.t.Fatal(err)
 	}
