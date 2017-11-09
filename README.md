@@ -1,3 +1,3 @@
-# go-cli-skeleton
+# Sapper
 
-A skeleton for Go-based CLI projects.
+A WordPress client.

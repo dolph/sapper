@@ -9,10 +9,15 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "Skeleton"
-	app.Usage = "Scaffolding for a command line interface."
+	app.Name = "sapper"
+	app.Usage = "A client for WordPress."
+
+	wordpress_endpoint := os.Getenv("WORDPRESS_ENDPOINT")
+	wordpress_cookie := os.Getenv("WORDPRESS_COOKIE")
+
 	app.Action = func(c *cli.Context) error {
-		fmt.Println("Hello, world!")
+		fmt.Println(wordpress_endpoint)
+		fmt.Println(wordpress_cookie)
 		return nil
 	}
 
