@@ -1,3 +1,3 @@
-# go-skeleton
+# go-cli-skeleton
 
-A skeleton for Go-based projects.
+A skeleton for Go-based CLI projects.

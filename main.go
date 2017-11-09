@@ -1,20 +1,20 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
+	"os"
 
-	// Google App Engine
-	"google.golang.org/appengine"
+	"gopkg.in/urfave/cli.v1"
 )
 
-// appengine.Main() expects packages to register HTTP handlers in their init()
-// functions.
-func init() {
-	http.Handle("/", Router())
-}
-
 func main() {
-	// Starts listening on port 8080 (or $PORT), and never returns.
-	// https://godoc.org/google.golang.org/appengine#Main
-	appengine.Main()
+	app := cli.NewApp()
+	app.Name = "Skeleton"
+	app.Usage = "Scaffolding for a command line interface."
+	app.Action = func(c *cli.Context) error {
+		fmt.Println("Hello, world!")
+		return nil
+	}
+
+	app.Run(os.Args)
 }
