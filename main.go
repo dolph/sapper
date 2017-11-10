@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -17,6 +18,18 @@ import (
 type WordPressClient struct {
 	endpoint string
 	cookie   string
+}
+
+func (wp WordPressClient) ValidateOptions() error {
+	if wp.endpoint == "" {
+		return errors.New("WordPress endpoint required (WORDPRESS_ENDPOINT)")
+	}
+
+	if wp.cookie == "" {
+		return errors.New("WordPress cookie required (WORDPRESS_COOKIE)")
+	}
+
+	return nil
 }
 
 func (wp WordPressClient) Get(path string) (string, error) {
@@ -73,6 +86,11 @@ func main() {
 	wpClient := WordPressClient{
 		endpoint: os.Getenv("WORDPRESS_ENDPOINT"),
 		cookie:   os.Getenv("WORDPRESS_COOKIE"),
+	}
+	err := wpClient.ValidateOptions()
+	if err != nil {
+		log.Fatal(err)
+		return
 	}
 
 	fmt.Println(wpClient.Get("/wp/v2/users"))
