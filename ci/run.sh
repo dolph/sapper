@@ -8,4 +8,4 @@ cd $DIR/../
 go get "gopkg.in/urfave/cli.v1"
 
 # Run unit tests.
-go run
+go run main.go
