@@ -87,10 +87,13 @@ func main() {
 				}
 				log.Println("Opened page:", bow.Title())
 
-				form := bow.Form("#adduser")
+				form, err := bow.Form("#adduser")
+				if err != nil {
+					panic(err)
+				}
 				form.Input("email", c.String("email"))
 				form.Input("role", c.String("role"))
-				err := form.Submit()
+				err = form.Submit()
 				if err != nil {
 					panic(err)
 				}
