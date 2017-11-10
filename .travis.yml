@@ -7,7 +7,7 @@ before_install:
 - go get gopkg.in/urfave/cli.v1
 - go get gopkg.in/headzoo/surf.v1
 script:
-- go test
+- go test -v
 - go build -v
 deploy:
   provider: releases
