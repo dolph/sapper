@@ -1,4 +1,3 @@
-FROM dolphm/ubuntu-google-cloud
+FROM golang:1.9
 
-RUN go get -u \
-    github.com/gorilla/mux
+RUN go get "gopkg.in/urfave/cli.v1"
