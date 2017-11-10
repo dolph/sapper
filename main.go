@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -32,7 +33,7 @@ func (wp WordPressClient) ValidateOptions() error {
 	return nil
 }
 
-func (wp WordPressClient) Get(path string) (string, error) {
+func (wp WordPressClient) Request(method string, path string, body io.Reader) (string, error) {
 	client := &http.Client{}
 
 	endpointUrl, err := url.Parse(wp.endpoint)
@@ -45,8 +46,8 @@ func (wp WordPressClient) Get(path string) (string, error) {
 	endpointUrl.Path = endpointUrl.Path + path
 
 	// Build the HTTP request.
-	fmt.Println("GET", endpointUrl.String())
-	req, err := http.NewRequest("GET", endpointUrl.String(), nil)
+	fmt.Println(method, endpointUrl.String())
+	req, err := http.NewRequest(method, endpointUrl.String(), body)
 	if err != nil {
 		log.Fatal("Error building HTTP request for endpoint:", err)
 		return "", err
@@ -78,9 +79,12 @@ func (wp WordPressClient) Get(path string) (string, error) {
 	return string(prettyJSON.Bytes()), nil
 }
 
-func (wp WordPressClient) Post(path string, body string) (string, error) {
-	// TODO: refactor Get() and implement this.
-	return "", nil
+func (wp WordPressClient) Get(path string) (string, error) {
+	return wp.Request("GET", path, nil)
+}
+
+func (wp WordPressClient) Post(path string, body io.Reader) (string, error) {
+	return wp.Request("POST", path, body)
 }
 
 func (wp WordPressClient) ListUsers() (string, error) {
@@ -90,7 +94,7 @@ func (wp WordPressClient) ListUsers() (string, error) {
 func (wp WordPressClient) UpdateUser(id string) (string, error) {
 	// Docs: https://developer.wordpress.org/rest-api/reference/users/#update-a-user
 	// TODO: pass a request body.
-	return wp.Post(fmt.Sprintf("/wp/v2/users/%s", id), "")
+	return wp.Post(fmt.Sprintf("/wp/v2/users/%s", id), nil)
 }
 
 func main() {
