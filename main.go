@@ -78,6 +78,21 @@ func (wp WordPressClient) Get(path string) (string, error) {
 	return string(prettyJSON.Bytes()), nil
 }
 
+func (wp WordPressClient) Post(path string, body string) (string, error) {
+	// TODO: refactor Get() and implement this.
+	return "", nil
+}
+
+func (wp WordPressClient) ListUsers() (string, error) {
+	return wp.Get("/wp/v2/users")
+}
+
+func (wp WordPressClient) UpdateUser(id string) (string, error) {
+	// Docs: https://developer.wordpress.org/rest-api/reference/users/#update-a-user
+	// TODO: pass a request body.
+	return wp.Post(fmt.Sprintf("/wp/v2/users/%s", id), "")
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "sapper"
@@ -93,17 +108,15 @@ func main() {
 		return
 	}
 
-	fmt.Println(wpClient.Get("/wp/v2/users"))
-
 	app.Action = func(c *cli.Context) error {
+		users, err := wpClient.ListUsers()
+		if err != nil {
+			log.Fatal(err)
+			return nil
+		}
+		fmt.Println(users)
 		return nil
 	}
-
-	// List users
-	// https://developer.ibm.com/code/wp-json/wp/v2/users
-
-	// Update a user
-	// Docs: https://developer.wordpress.org/rest-api/reference/users/#update-a-user
 
 	app.Run(os.Args)
 }
