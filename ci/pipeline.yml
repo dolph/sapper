@@ -6,10 +6,6 @@ resources:
     uri: git@github.com:dolph/sapper.git
     branch: master
     private_key: {{ssh_private_key}}
-- name: weekly
-  type: time
-  source:
-    interval: 168h
 - name: periodic
   type: time
   source:
