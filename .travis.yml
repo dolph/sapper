@@ -1,0 +1,19 @@
+---
+language: go
+os:
+- linux
+- osx
+before_install:
+- go get gopkg.in/urfave/cli.v1
+- go get gopkg.in/headzoo/surf.v1
+install:
+- go test
+- go build -v
+deploy:
+  provider: releases
+  api_key:
+    secure: Cf4Pj9dG3bxhOU2PdDjA2Urqb1RSd3avpRz7K/ZteJYmunP3pvWbVbB9yDYvchea9NkrgK9nhRoODVZLdT0D/sPpYwzzm49U5dGZvNjQHYlNxCmxs/UPWztw8xMq66W7RBZ0tDKvhmzGerwPGCY0oLXBfxcWEwcA1HMFp1jJwJeLHbnXBWUA4hqt/khXknsBEHtQwqcpU0aqeiLHM/q/NA+w66uuvEFpnFzfjytdApfwH78RKT+DVYfaZr+Yq/gQfQ+t4B0cCYti9N9MJK3IToWyJiLR1BhRe2dB86o00m/TfnJ3IhxaSyOYzygsTkQsl9Yd1vtepXKRzVryHgU3xhco2xzNiBMnwt9WjYu9mFBK8m+ahs92R8n/VVspufQQwCUVaJaZiP/ywPzW7eRQpYdL0ApvFD2xqvQexkJ7vQ4oHOKOl/7iz81zaHBfEnFYx8YSWLyOwpl4DKR9WGVZrM7OrEORT1kx0cYACvZpJQPPDzPamiuKgTnR+vAg85PPdIO17uzD6RSHNnB1C07Guoa7EvV5s1MwJ9yvs5Q/8Gly0xHcSGwsSRqz7MpCuUMiv6KfFu81JePS7jTJL0PxSR23ZznkqCSr8k4IRtXiBL1sHXV6xB4KuOKHeYQCyYmVNlaA58Pz1KxifQGKS6HasXsobqJ5YT5d5Hrxye6sJYI=
+  file: sapper
+  skip_cleanup: true
+  on:
+    tags: true
