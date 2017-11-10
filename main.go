@@ -16,6 +16,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "sapper"
+	app.Version = "1.0.0"
 	app.Usage = "A client for WordPress."
 
 	// Validate environment variables.
