@@ -3,7 +3,7 @@ resources:
 - name: repo
   type: git
   source:
-    uri: git@github.com:dolph/go-skeleton.git
+    uri: git@github.com:dolph/sapper.git
     branch: master
     private_key: {{ssh_private_key}}
 - name: weekly
