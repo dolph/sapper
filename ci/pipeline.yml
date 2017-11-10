@@ -77,5 +77,5 @@ jobs:
       run:
         path: repo/ci/run.sh
       params:
-      - WORDPRESS_ENDPOINT: {{ wordpress_endpoint }}
-      - WORDPRESS_COOKIE: {{ wordpress_cookie }}
+        WORDPRESS_ENDPOINT: {{wordpress_endpoint}}
+        WORDPRESS_COOKIE: {{wordpress_cookie}}
